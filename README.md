@@ -79,7 +79,29 @@ npm run build      # production build into dist/
 npm run preview    # preview the production build
 ```
 
-## 3. Deploy on Cloudflare Pages
+## 3. Deploy on Render (static site)
+
+`render.yaml` contains the correct Render Blueprint for this Vite project:
+
+| Setting | Value |
+| --- | --- |
+| Build Command | `npm install && npm run build` |
+| Publish Directory | `dist` |
+| NODE_VERSION | `22` |
+
+Create the service with **New → Blueprint → connect the GitHub repo → select `render.yaml`**.
+
+If the Static Site was created manually and already shows a **black page**, its Publish Directory
+is pointing at the repository root. In that case open **Settings → Build & Deploy**, set the three
+values above (especially **Publish Directory = `dist`**) and click **Manual Deploy → Deploy latest commit**.
+Publishing the root serves the unbuilt `index.html` with `/src/main.tsx`, which a static host cannot
+run, so React never mounts and the dark page stays empty.
+
+The menu uses hash links (`#menu`, `#histoire`, `#infos`, `#contact`, `?table=5`), so no extra
+redirect or rewrite rule is needed on Render. The QR code files in `qr-code/` are unchanged; keep
+them pointing at the final site URL.
+
+## 4. Deploy on Cloudflare Pages
 
 ### Option A — Connect a Git repository (recommended, updates automatically)
 
@@ -112,7 +134,7 @@ npx wrangler pages deploy dist --project-name dz-legends-pizza
 
 In your Pages project, go to **Custom domains → Set up a custom domain** and follow the DNS steps.
 
-## 4. Create the QR codes
+## 5. Create the QR codes
 
 Generate a QR code (any free generator, or a print shop) that points to your site:
 
@@ -122,7 +144,7 @@ Generate a QR code (any free generator, or a print shop) that points to your sit
 
 Print the QR codes on table cards or stickers. Test each code with a phone before printing.
 
-## 5. Static HTML package and QR code generator
+## 6. Static HTML package and QR code generator
 
 `dz-legends-pizza-static-site.zip` contains the complete static website (the contents of `dist/`: `index.html`, `images/`, favicons, `_headers`).
 Unzip it and upload the folder to Cloudflare Pages (**Create → Pages → Upload assets**), or any static host.

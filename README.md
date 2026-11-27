@@ -92,10 +92,17 @@ npm run preview    # preview the production build
 Create the service with **New → Blueprint → connect the GitHub repo → select `render.yaml`**.
 
 If the Static Site was created manually and already shows a **black page**, its Publish Directory
-is pointing at the repository root. In that case open **Settings → Build & Deploy**, set the three
-values above (especially **Publish Directory = `dist`**) and click **Manual Deploy → Deploy latest commit**.
-Publishing the root serves the unbuilt `index.html` with `/src/main.tsx`, which a static host cannot
-run, so React never mounts and the dark page stays empty.
+is pointing at the repository root. Publishing the root serves the unbuilt `index.html` with
+`/src/main.tsx`, which a static host cannot run, so React never mounts and the dark page stays empty.
+
+Two fixes are included for that case:
+
+1. Recommended: open **Settings → Build & Deploy**, set the three values above (especially
+   **Publish Directory = `dist`**) and click **Manual Deploy → Deploy latest commit**.
+2. Automatic safety net: `npm run build` also runs `scripts/render-root-fallback.mjs`. On Render
+   only (`RENDER=true`), it copies the finished `dist/` into the repository root, so even the
+   wrongly configured service serves the real single-file app and its images. It does nothing
+   locally and does not change the source files.
 
 The menu uses hash links (`#menu`, `#histoire`, `#infos`, `#contact`, `?table=5`), so no extra
 redirect or rewrite rule is needed on Render. The QR code files in `qr-code/` are unchanged; keep
